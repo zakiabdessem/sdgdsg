@@ -1,10 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000">
-  <rect width="1000" height="1000" fill="white"/>
-  <foreignObject x="10" y="10" width="980" height="980">
-    <div xmlns="http://www.w3.org/1999/xhtml" style="font-family: monospace; font-size: 20px;">
-      <div id="flagContent">Loading flag...</div>
-     <script>
-        const paths = [
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
+  <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />
+  <script type="text/javascript">
+    alert('Script started');
+    const paths = [
           '/flag',
           '/flags/flag.txt',
           '/flag.txt',
@@ -50,7 +48,5 @@
         }
         
         tryNextPath();
-      </script>
-    </div>
-  </foreignObject>
+  </script>
 </svg> 
