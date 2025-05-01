@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE svg [ <!ENTITY xxe SYSTEM "http://localhost:8001/"> ]>
-<svg xmlns="http://www.w3.org/2000/svg" width="500" height="300">
-  <rect width="500" height="300" fill="white"/>
-  <text x="10" y="50" font-size="12" fill="black">&xxe;</text>
+<!DOCTYPE svg [<!ENTITY test "Simple Entity Test">]>
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="100">
+  <rect width="200" height="100" fill="green"/>
+  <text x="10" y="50" font-size="12" fill="white">&test;</text>
 </svg>
