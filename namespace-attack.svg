@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" 
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     xmlns:xi="http://www.w3.org/2001/XInclude"
+     width="100" height="100">
+  <xi:include href="file:///flag.txt" parse="text"/>
+  <rect width="100" height="100" fill="green"/>
+</svg> 

