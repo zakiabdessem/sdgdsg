@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000">
+  <defs>
+    <filter id="reveal">
+      <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 100 0"/>
+    </filter>
+  </defs>
+  <rect width="1000" height="1000" fill="white"/>
+  <text x="10" y="50" font-size="20" filter="url(#reveal)">
+    <set attributeName="visibility" to="visible" begin="1s"/>
+    <set attributeName="fill" to="red" begin="1s"/>
+    <set attributeName="x" to="10" begin="1s"/>
+    <set attributeName="y" to="50" begin="1s"/>
+    <set attributeName="font-size" to="20" begin="1s"/>
+    <set attributeName="text" to="file:///flag.txt" begin="1s"/>
+  </text>
+</svg> 
