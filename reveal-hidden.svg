@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600">
+  <defs>
+    <!-- High contrast filter -->
+    <filter id="high-contrast">
+      <feColorMatrix type="matrix" values="2 0 0 0 -0.5
+                                           0 2 0 0 -0.5
+                                           0 0 2 0 -0.5
+                                           0 0 0 1 0"/>
+    </filter>
+    
+    <!-- Invert colors filter -->
+    <filter id="invert-colors">
+      <feColorMatrix type="matrix" values="-1 0 0 0 1
+                                           0 -1 0 0 1
+                                           0 0 -1 0 1
+                                           0 0 0 1 0"/>
+    </filter>
+    
+    <!-- Highlight invisible ink filter -->
+    <filter id="reveal-invisible">
+      <feColorMatrix type="matrix" values="10 0 0 0 0
+                                           0 10 0 0 0
+                                           0 0 10 0 0
+                                           0 0 0 1 0"/>
+    </filter>
+    
+    <!-- Edge detection filter -->
+    <filter id="edge-detect">
+      <feConvolveMatrix order="3" kernelMatrix="-1 -1 -1 -1 8 -1 -1 -1 -1"/>
+    </filter>
+  </defs>
+  
+  <!-- Apply each filter to a separate area -->
+  <rect x="0" y="0" width="200" height="600" fill="white" filter="url(#high-contrast)"/>
+  <rect x="200" y="0" width="200" height="600" fill="white" filter="url(#invert-colors)"/>
+  <rect x="400" y="0" width="200" height="600" fill="white" filter="url(#reveal-invisible)"/>
+  <rect x="600" y="0" width="200" height="600" fill="white" filter="url(#edge-detect)"/>
+  
+  <!-- Labels for each filter section -->
+  <text x="100" y="20" text-anchor="middle" font-size="14" fill="black">High Contrast</text>
+  <text x="300" y="20" text-anchor="middle" font-size="14" fill="black">Inverted</text>
+  <text x="500" y="20" text-anchor="middle" font-size="14" fill="black">Reveal Invisible</text>
+  <text x="700" y="20" text-anchor="middle" font-size="14" fill="black">Edge Detection</text>
+</svg> 

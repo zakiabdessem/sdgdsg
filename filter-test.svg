@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500">
+  <defs>
+    <filter id="highlight" x="0" y="0" width="100%" height="100%">
+      <feColorMatrix type="matrix" values="1 0 0 0 0
+                                           0 1 0 0 0
+                                           0 0 1 0 0
+                                           0 0 0 20 -10"/>
+    </filter>
+  </defs>
+  <rect x="0" y="0" width="500" height="500" fill="white" filter="url(#highlight)"/>
+</svg> 

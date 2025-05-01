@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000">
+  <defs>
+    <!-- Filter to reveal hidden text -->
+    <filter id="reveal">
+      <feColorMatrix type="matrix" values="100 0 0 0 0
+                                           0 100 0 0 0
+                                           0 0 100 0 0
+                                           0 0 0 1 0"/>
+    </filter>
+    <!-- Filter to detect edges -->
+    <filter id="edge">
+      <feConvolveMatrix order="3" kernelMatrix="-1 -1 -1 -1 8 -1 -1 -1 -1"/>
+    </filter>
+    <!-- Filter to enhance contrast -->
+    <filter id="contrast">
+      <feColorMatrix type="matrix" values="10 0 0 0 0
+                                           0 10 0 0 0
+                                           0 0 10 0 0
+                                           0 0 0 1 0"/>
+    </filter>
+  </defs>
+  
+  <!-- Apply filters to different areas -->
+  <rect x="0" y="0" width="1000" height="1000" fill="white" filter="url(#reveal)"/>
+  <rect x="0" y="0" width="1000" height="1000" fill="white" filter="url(#edge)"/>
+  <rect x="0" y="0" width="1000" height="1000" fill="white" filter="url(#contrast)"/>
+  
+  <!-- Try to load flag.txt as an image -->
+  <image href="file:///flag.txt" x="0" y="0" width="1000" height="1000"/>
+</svg> 

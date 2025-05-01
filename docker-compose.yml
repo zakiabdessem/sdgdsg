@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  crafty-vectors:
+    build: .
+    ports:
+      - "1303:5000"
+    environment:
+      FLASK_ENV: development
+    restart: always

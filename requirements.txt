@@ -1,0 +1,5 @@
+Flask==2.2.3
+lxml==4.9.3
+Werkzeug==2.2.2
+requests
+pillow

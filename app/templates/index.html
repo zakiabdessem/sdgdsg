@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crafty Vectors</title> <!-- Themed Title -->
+
+    <!-- Link to Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Embedded CSS -->
+    <style>
+        /* --- Configuration --- */
+        :root {
+            --bg-color: #0d0d0d; /* Very dark background */
+            --primary-color: #00ff41; /* Bright green */
+            --secondary-color: #3a3a3a; /* Dark grey for borders/elements */
+            --glow-color: rgba(0, 255, 65, 0.6); /* Neon green glow */
+            --text-color: var(--primary-color);
+            --font-family: 'Fira Code', 'Courier New', Courier, monospace;
+            --button-hover-bg: var(--primary-color);
+            --button-hover-text: var(--bg-color);
+            --input-bg: #1a1a1a; /* Slightly lighter dark for input */
+        }
+
+        /* --- Base & Reset --- */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.7;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            /* Add subtle scanlines effect */
+            background-image: linear-gradient(
+                rgba(18, 16, 16, 0) 50%,
+                rgba(0, 0, 0, 0.2) 50%
+            ),
+            linear-gradient(
+                90deg,
+                rgba(255, 0, 0, 0.04),
+                rgba(0, 255, 0, 0.02),
+                rgba(0, 0, 255, 0.04)
+            );
+            background-size: 100% 3px, 4px 100%;
+        }
+
+        /* --- Layout Container --- */
+        .container {
+            width: 100%;
+            max-width: 740px;
+            border: 1px solid var(--secondary-color);
+            padding: 2rem 3rem;
+            background-color: rgba(13, 13, 13, 0.85);
+            box-shadow: 0 0 25px var(--glow-color);
+            border-radius: 2px;
+        }
+
+        /* --- Header --- */
+        .header h1 {
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 8px var(--glow-color);
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+
+        .header .bracket {
+            color: #666;
+            font-weight: 400;
+        }
+
+        /* --- Main Content & Form --- */
+        .main-content {
+            margin-bottom: 2rem;
+        }
+
+        .fetch-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            margin-bottom: 0.8rem;
+            font-size: 1.1em;
+        }
+
+        .form-input {
+            background-color: var(--input-bg);
+            border: 1px solid var(--secondary-color);
+            color: var(--text-color);
+            padding: 0.8rem 1rem;
+            font-family: inherit;
+            font-size: 1em;
+            margin-bottom: 1.5rem;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            caret-color: var(--primary-color);
+        }
+
+        .form-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px var(--glow-color);
+        }
+
+        .form-input::placeholder {
+            color: #555;
+            opacity: 0.8;
+        }
+
+        .form-button {
+            background-color: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--text-color);
+            padding: 0.8rem 1.5rem;
+            font-family: inherit;
+            font-size: 1.1em;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+            align-self: center;
+            margin-top: 1rem;
+        }
+
+        .form-button:hover,
+        .form-button:focus {
+            background-color: var(--button-hover-bg);
+            color: var(--button-hover-text);
+            box-shadow: 0 0 15px var(--glow-color);
+            outline: none;
+        }
+
+        /* --- Footer --- */
+        .footer {
+            text-align: center;
+            font-size: 0.9em;
+            color: #666;
+            border-top: 1px dashed var(--secondary-color);
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+
+        .footer .status {
+            font-style: italic;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><span class="bracket">[</span> Resource Interlink Module <span class="bracket">]</span></h1>
+        </header>
+
+        <main class="main-content">
+            <!-- Form posts to the /fetch endpoint -->
+            <form action="/fetch" method="post" class="fetch-form" id="fetch-form">
+                <!-- Label matches the input id -->
+                <label for="url-input" class="form-label">> Target Resource Locator:</label>
+                <!-- Input field name is "url" as expected by Flask -->
+                <!-- *** UPDATED PLACEHOLDER BELOW *** -->
+                <input type="text" name="url" id="url-input" class="form-input" required placeholder="e.g., https://raw.githubusercontent.com/.../image.svg">
+                <button type="submit" class="form-button">Initiate Transfer</button>
+            </form>
+        </main>
+
+        <footer class="footer">
+            <p class="status">// System Online // Awaiting Directive //</p>
+        </footer>
+    </div>
+</body>
+</html>
